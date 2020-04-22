@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'">
+    <title>Webview | Cursed Analytics</title>
+    <script>
+      window.electron.injectBase();
+      window.electron.injectWebview();
+    </script>
+  </head>
+  <body>
+    <webview class="hidden" id="webview" src="https://authors.curseforge.com/" preload="./js/webview-preload.js"></webview>
+    <!--Used for testing Cloudflare CAPTCHA-->
+    <!--<webview id="webview" src="https://forum.cfx.re/" preload="./js/webview-preload.js"></webview>-->
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'">
+    <title>Setup | Cursed Analytics</title>
+    <script>
+      window.electron.injectBase();
+      window.electron.injectJQuery();
+      window.electron.injectBootstrap();
+      window.electron.injectSetup();
+    </script>
+  </head>
+  <body>
+    <div class="container" style="padding-top: 20px;">
+      <div id="alert"></div>
+      <form id="form-storage">
+        <div class="form-row">
+          <div class="form-group col-md-8">
+            <label class="no-select" for="input-host">Host</label>
+            <input type="text" class="form-control" id="input-host" placeholder="localhost">
+          </div>
+          <div class="form-group col-md-4">
+            <label class="no-select" for="input-port">Port</label>
+            <input type="number" class="form-control" id="input-port" placeholder="3306" min="1" max="65535">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="no-select" for="input-database">Database</label>
+          <input type="text" class="form-control" id="input-database" placeholder="curse_analytics">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="no-select" for="input-username">Username</label>
+            <input type="text" class="form-control" id="input-username" placeholder="curse_analytics">
+          </div>
+          <div class="form-group col-md-6">
+            <label class="no-select" for="input-password">Password</label>
+            <input type="password" class="form-control" id="input-password">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Connect</button>
+      </form>
+    </div>
+  </body>
+</html>
