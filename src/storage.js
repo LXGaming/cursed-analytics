@@ -44,15 +44,15 @@ function connect(host, port, database, username, password) {
 function createTables(callback) {
   connection.query(""
     + "CREATE TABLE IF NOT EXISTS `stats` ("
-    + "`statDate` DATE NOT NULL,"
-    + "`projectId` INT(11) NOT NULL,"
-    + "`projectName` VARCHAR(255) NULL DEFAULT NULL,"
-    + "`projectPoints` DOUBLE NULL DEFAULT NULL,"
-    + "`projectTotalDownloads` INT(11) NULL DEFAULT NULL,"
-    + "`projectDailyDownloads` INT(11) NULL DEFAULT NULL,"
-    + "`projectDailyUniqueDownloads` INT(11) NULL DEFAULT NULL,"
-    + "`projectDailyTwitchDownloads` INT(11) NULL DEFAULT NULL,"
-    + "`projectDailyCurseForgeDownloads` INT(11) NULL DEFAULT NULL,"
+    + "`statDate` DATE NOT NULL, "
+    + "`projectId` INT(11) NOT NULL, "
+    + "`projectName` VARCHAR(255) NULL DEFAULT NULL, "
+    + "`projectPoints` DOUBLE NULL DEFAULT NULL, "
+    + "`projectTotalDownloads` INT(11) NULL DEFAULT NULL, "
+    + "`projectDailyDownloads` INT(11) NULL DEFAULT NULL, "
+    + "`projectDailyUniqueDownloads` INT(11) NULL DEFAULT NULL, "
+    + "`projectDailyTwitchDownloads` INT(11) NULL DEFAULT NULL, "
+    + "`projectDailyCurseForgeDownloads` INT(11) NULL DEFAULT NULL, "
     + "PRIMARY KEY (`statDate`, `projectId`))", (error) => callback(error));
 }
 

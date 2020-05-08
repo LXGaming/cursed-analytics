@@ -17,13 +17,7 @@ function initialize() {
   }
 
   if (window.location.pathname === "/dashboard/projects") {
-    let projectIds = getProjectIds();
-    if (projectIds != null) {
-      ipcRenderer.sendToHost("analytics", getProjectIds());
-      return;
-    }
-
-    console.error("Project Ids is unavailable");
+    ipcRenderer.sendToHost("analytics", getProjectIds());
   }
 }
 

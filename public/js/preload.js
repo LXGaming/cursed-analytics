@@ -83,7 +83,7 @@ function createAlert(args) {
 
   const buttonElement = document.createElement("button");
   buttonElement.classList.add("close", "no-select");
-  buttonElement.type = "button"
+  buttonElement.type = "button";
   buttonElement.setAttribute("data-dismiss", "alert");
   buttonElement.setAttribute("aria-label", "Close");
 
