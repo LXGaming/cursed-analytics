@@ -12,6 +12,12 @@ function onBeforeRequest(details, callback) {
     return;
   }
 
+  // Development Environment
+  // if (url.protocol === "file:") {
+  //   callback(details);
+  //   return;
+  // }
+
   // Only allow https and websockets
   if (url.protocol !== "https:" && url.protocol !== "wss:") {
     block(url, callback, {cancel: true});
