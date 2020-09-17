@@ -12,11 +12,11 @@ function onBeforeRequest(details, callback) {
     return;
   }
 
-  // Development Environment
-  // if (url.protocol === "file:") {
-  //   callback(details);
-  //   return;
-  // }
+  // Allow WebView
+  if (url.protocol === "file:" && (url.pathname.endsWith(".css") || url.pathname.endsWith(".html") || url.pathname.endsWith(".js"))) {
+    callback(details);
+    return;
+  }
 
   // Only allow https and websockets
   if (url.protocol !== "https:" && url.protocol !== "wss:") {
