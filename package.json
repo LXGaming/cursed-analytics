@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "electron": "^10.1.2",
+    "electron": "^10.2.0",
     "electron-builder": "^22.8.0",
     "popper.js": "^1.16.1"
   },
