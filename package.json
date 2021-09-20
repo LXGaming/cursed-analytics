@@ -1,36 +1,52 @@
 {
   "name": "cursed-analytics",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "private": true,
   "description": "Cursed Analytics",
   "license": "Apache-2.0",
   "author": "Alex Thomson",
-  "main": "src/main.js",
+  "main": "build/src/main.js",
   "build": {
     "appId": "io.github.lxgaming.cursedanalytics",
     "productName": "Cursed Analytics",
+    "files": [
+      "build/**/*",
+      "public/**/*"
+    ],
     "win": {
       "target": "portable",
-      "icon": "build/icon.ico"
+      "icon": "public/img/icon.ico"
     }
   },
   "scripts": {
-    "dist": "electron-builder",
-    "start": "cross-env NODE_ENV=development electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "dev": "npm run build && cross-env NODE_ENV=development electron --remote-debugging-port=9222 .",
+    "dist": "npm run lint && npm run build && electron-builder",
+    "lint": "eslint src --ext .js,.ts",
+    "start": "npm run build && electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc -w"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
-    "electron": "^10.2.0",
-    "electron-builder": "^22.8.0",
-    "popper.js": "^1.16.1"
+    "@types/mysql": "^2.15.19",
+    "@types/node": "^16.9.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "cross-env": "^7.0.3",
+    "electron": "^14.0.1",
+    "electron-builder": "^22.11.7",
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "bootstrap": "^4.5.2",
-    "csv-parse": "^4.12.0",
-    "electron-dl": "^3.0.2",
-    "electron-store": "^6.0.0",
-    "jquery": "^3.5.1",
-    "mysql": "^2.18.1"
+    "bootstrap": "^5.1.1",
+    "electron-store": "^8.0.0",
+    "jquery": "^3.6.0",
+    "mysql": "^2.18.1",
+    "node-cache": "^5.1.2"
   }
 }

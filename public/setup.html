@@ -1,46 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'">
-    <title>Setup | Cursed Analytics</title>
-    <script>
-      window.electron.injectBase();
-      window.electron.injectJQuery();
-      window.electron.injectBootstrap();
-      window.electron.injectSetup();
-    </script>
-  </head>
-  <body>
-    <div class="container" style="padding-top: 20px;">
-      <div id="alert"></div>
-      <form id="form-storage">
-        <div class="form-row">
-          <div class="form-group col-md-8">
-            <label class="no-select" for="input-host">Host</label>
-            <input type="text" class="form-control" id="input-host" placeholder="localhost">
-          </div>
-          <div class="form-group col-md-4">
-            <label class="no-select" for="input-port">Port</label>
-            <input type="number" class="form-control" id="input-port" placeholder="3306" min="1" max="65535">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="no-select" for="input-database">Database</label>
-          <input type="text" class="form-control" id="input-database" placeholder="curse_analytics">
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label class="no-select" for="input-username">Username</label>
-            <input type="text" class="form-control" id="input-username" placeholder="curse_analytics">
-          </div>
-          <div class="form-group col-md-6">
-            <label class="no-select" for="input-password">Password</label>
-            <input type="password" class="form-control" id="input-password">
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Connect</button>
-      </form>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <title>Setup | Cursed Analytics</title>
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/setup-style.css">
+</head>
+<body class="background">
+
+<div class="container">
+  <header class="d-flex flex-wrap justify-content-start p-3 my-3 text-white bg-dark rounded shadow-sm">
+    <div class="d-flex align-items-center">
+      <img class="me-3" src="img/icon.png" alt="" width="32" height="32">
+      <div class="lh-1">
+        <h1 class="h6 mb-0 text-white lh-1">Cursed Analytics</h1>
+        <small>Created by LX_Gaming</small>
+      </div>
     </div>
-  </body>
+  </header>
+  
+  <main>
+    <!-- Storage -->
+    <div class="my-3 rounded shadow-sm">
+      <div class="d-flex flex-wrap justify-content-start p-3 text-white bg-dark rounded-top">
+        <div class="d-flex align-items-center">
+          <h1 class="h6 mb-0 text-white lh-1">Storage</h1>
+        </div>
+      </div>
+      <div class="bg-white p-3 rounded-bottom">
+        <form class="row g-3" id="form-storage">
+          <div class="col-12">
+            <label class="form-label" for="input-engine">Engine</label>
+            <select class="form-select" id="input-engine" disabled>
+              <option value="mysql" selected>MySQL</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="input-address">Address</label>
+            <input class="form-control" id="input-address" placeholder="localhost:3306" type="text">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="input-database">Database</label>
+            <input class="form-control" id="input-database" placeholder="curse_analytics" type="text">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="input-username">Username</label>
+            <input class="form-control" id="input-username" placeholder="curse_analytics" type="text">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="input-password">Password</label>
+            <input class="form-control" id="input-password" type="password">
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">
+              <span class="spinner-border spinner-border-sm me-1 d-none" role="status"></span>
+              <span class="d-none">Connecting...</span>
+              <span>Connect</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Log -->
+    <div class="my-3 rounded shadow-sm">
+      <div class="d-flex flex-wrap justify-content-start p-3 text-white bg-dark rounded-top">
+        <div class="d-flex align-items-center">
+          <h1 class="h6 mb-0 text-white lh-1">Log</h1>
+        </div>
+      </div>
+      <div class="bg-white font-monospace lh-1 log overflow-auto rounded-bottom">
+        <ul class="list-group list-group-flush" id="log">
+        </ul>
+      </div>
+    </div>
+    
+  </main>
+</div>
+
+<template id="log-template">
+  <li class="list-group-item p-1">
+    <small></small>
+  </li>
+</template>
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/setup-script.js"></script>
+</body>
 </html>

@@ -18,7 +18,10 @@ Due to [CurseForge](https://www.curseforge.com/) switching [Cloudflare](https://
 - Grafana Instance ([Pre-Built Dashboard](https://github.com/jaredlll08/CurseForge-Stats/blob/master/grafana-dash.json))
 
 ## Usage
-`npm run start`
+```
+npm install
+npm run start
+```
 
 ## License
 Cursed Analytics is licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license.

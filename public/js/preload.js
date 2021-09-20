@@ -1,170 +1,147 @@
 const {contextBridge, ipcRenderer} = require("electron");
 const path = require("path");
+const {fileURLToPath} = require("url");
 
-const currentPath = path.resolve(__dirname, "..", "..");
+const publicPath = path.resolve(__dirname, "..");
 
-function injectCSS(url) {
-  const element = document.createElement("link");
-  element.rel = "stylesheet";
-  element.type = "text/css";
-  element.href = url;
-  document.head.append(element);
+function initialize() {
+  const file = fileURLToPath(window.location.toString());
+  if (file === path.join(publicPath, "setup.html")) {
+    initializeSetup();
+  }
+
+  if (file === path.join(publicPath, "webview.html")) {
+    initializeWebview();
+  }
 }
 
-function injectScript(url) {
-  const element = document.createElement("script");
-  element.defer = true;
-  element.src = url;
-  document.head.append(element);
-}
+function initializeSetup() {
+  contextBridge.exposeInMainWorld("electron", {
+    connectStorage: (engine, address, database, username, password) => {
+      toggleFormState();
+      createLog("debug", "Connecting...");
 
-function populateInputs() {
-  window.addEventListener("load", () => {
-    const storage = ipcRenderer.sendSync("config:storage");
-    setValue("input-host", storage.host);
+      ipcRenderer.invoke("storage.connect", {
+        engine: engine,
+        address: address,
+        database: database,
+        username: username,
+        password: password
+      }).finally(() => {
+        toggleFormState();
+      });
+    }
+  });
 
-    if (storage.port >= 1 && storage.port <= 65535) {
-      setValue("input-port", storage.port);
+  ipcRenderer.on("window.notify", (event, args) => createLog(args.level, args.message));
+  ipcRenderer.invoke("configuration.config").then(config => {
+    if (config.storage.engine) {
+      setValue("input-engine", config.storage.engine);
     }
 
-    setValue("input-database", storage.database);
-    setValue("input-username", storage.username);
-    setValue("input-password", storage.password);
+    setValue("input-address", config.storage.address);
+    setValue("input-database", config.storage.database);
+    setValue("input-username", config.storage.username);
+    setValue("input-password", config.storage.password);
+  }, reason => {
+    console.error("Encountered an error while invoking configuration:config: %s", reason);
+    return null;
   });
+}
+
+function initializeWebview() {
+  const webview = document.getElementById("webview");
+  if (!webview) {
+    return;
+  }
+
+  webview.addEventListener("ipc-message", event => {
+    if (!event.channel) {
+      return;
+    }
+
+    const channel = event.channel;
+    if (channel === "window.show") {
+      webview.classList.remove("hidden");
+      ipcRenderer.send(channel);
+    }
+  });
+}
+
+function createLog(level, message) {
+  let color;
+  if (!level || !message) {
+    return;
+  } else if (level === "debug") {
+    color = "primary";
+  } else if (level === "information") {
+    color = "success";
+  } else if (level === "warning") {
+    color = "warning";
+  } else if (level === "error") {
+    color = "danger";
+  } else {
+    console.warn(`Unsupported alert level ${level}`);
+    return;
+  }
+
+  const logElement = document.getElementById("log");
+  if (!logElement) {
+    return;
+  }
+
+  const logTemplate = document.getElementById("log-template");
+  if (!logTemplate) {
+    return;
+  }
+
+  const node = logTemplate.content.cloneNode(true);
+
+  const element = node.querySelector("li");
+  element.classList.add(`list-group-item-${color}`);
+
+  const textElement = element.querySelector("small");
+  textElement.innerText = `[${new Date().toLocaleTimeString("en-GB")}] ${message}`;
+
+  logElement.prepend(node);
+}
+
+function toggleFormState() {
+  const formElement = document.getElementById("form-storage");
+  if (!formElement) {
+    return;
+  }
+
+  const elements = formElement.querySelectorAll("button,input,span");
+  for (const element of elements) {
+    if (element.tagName === "SPAN") {
+      if (element.classList.contains("d-none")) {
+        element.classList.remove("d-none");
+      } else {
+        element.classList.add("d-none");
+      }
+
+      continue;
+    }
+
+    if (element.hasAttribute("disabled")) {
+      element.removeAttribute("disabled");
+    } else {
+      element.setAttribute("disabled", "");
+    }
+  }
 }
 
 function setValue(id, value) {
   const element = document.getElementById(id);
-  if (element == null) {
+  if (!element) {
+    console.warn(`Failed to get element ${id}`);
     return;
   }
 
   element.value = value;
 }
 
-function clearAlerts() {
-  const alertElement = document.getElementById("alert");
-  if (alertElement == null) {
-    return;
-  }
-
-  while (alertElement.firstChild) {
-    alertElement.removeChild(alertElement.firstChild);
-  }
-}
-
-function clearAlert(id) {
-  const alertElement = document.getElementById("alert");
-  if (alertElement == null) {
-    return;
-  }
-
-  const elements = alertElement.querySelectorAll("[data-id=" + id + "]");
-  for (let index = 0; index < elements.length; index++) {
-    alertElement.removeChild(elements[index]);
-  }
-}
-
-function createAlert(args) {
-  if (args == null || args.type == null || args.message == null) {
-    return;
-  }
-
-  const alertElement = document.getElementById("alert");
-  if (alertElement == null) {
-    return;
-  }
-
-  const divElement = document.createElement("div");
-  divElement.classList.add("alert", "alert-" + args.type, "alert-dismissible", "fade", "show");
-  divElement.innerText = args.message;
-  divElement.setAttribute("data-id", args.id || "generic");
-  divElement.setAttribute("role", "alert");
-
-  const buttonElement = document.createElement("button");
-  buttonElement.classList.add("close", "no-select");
-  buttonElement.type = "button";
-  buttonElement.setAttribute("data-dismiss", "alert");
-  buttonElement.setAttribute("aria-label", "Close");
-
-  const spanElement = document.createElement("span");
-  spanElement.innerHTML = "&times;";
-  spanElement.setAttribute("aria-hidden", "true");
-
-  buttonElement.append(spanElement);
-  divElement.append(buttonElement);
-  alertElement.prepend(divElement);
-}
-
-contextBridge.exposeInMainWorld("electron", {
-  injectBase: () => {
-    injectCSS(path.join(currentPath, "public", "css", "style.css"));
-  },
-  injectBootstrap: () => {
-    injectCSS(path.join(currentPath, "node_modules", "bootstrap", "dist", "css", "bootstrap.min.css"));
-    injectCSS(path.join(currentPath, "public", "css", "bootstrap-style.css"));
-    injectScript(path.join(currentPath, "node_modules", "bootstrap", "dist", "js", "bootstrap.bundle.min.js"));
-  },
-  injectJQuery: () => {
-    injectScript(path.join(currentPath, "node_modules", "jquery", "dist", "jquery.min.js"));
-  },
-  injectSetup: () => {
-    injectScript(path.join(currentPath, "public", "js", "setup-script.js"));
-    populateInputs();
-  },
-  injectWebview: () => {
-    injectCSS(path.join(currentPath, "public", "css", "webview-style.css"));
-  },
-  clearAlerts: () => {
-    clearAlerts();
-  },
-  clearAlert: (id) => {
-    clearAlert(id);
-  },
-  storageConnect: (host, port, database, username, password) => {
-    createAlert({id: "connecting", type: "primary", message: "Connecting..."});
-    ipcRenderer.send("storage:connect", {
-      host: host,
-      port: port,
-      database: database,
-      username: username,
-      password: password
-    });
-  }
-});
-
-ipcRenderer.on("alert", (event, args) => {
-  clearAlert("connecting");
-  if (args.type === "debug") {
-    createAlert({type: "primary", message: args.message});
-  } else if (args.type === "info") {
-    createAlert({type: "success", message: args.message});
-  } else if (args.type === "warn") {
-    createAlert({type: "warning", message: args.message});
-  } else if (args.type === "error") {
-    createAlert({type: "danger", message: args.message});
-  } else {
-    console.warn("Unsupported alert type:", args.type);
-  }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-  const webview = document.getElementById("webview");
-  if (webview == null) {
-    return;
-  }
-
-  webview.addEventListener("ipc-message", (event) => {
-    if (event.channel == null || event.args == null || event.args.length !== 1) {
-      return;
-    }
-
-    const channel = event.channel;
-    const args = event.args[0];
-    if (channel === "window:settings" && args.visibility === true) {
-      webview.classList.remove("hidden");
-    }
-
-    ipcRenderer.send(channel, args);
-  });
+window.addEventListener("DOMContentLoaded", event => {
+  initialize();
 });

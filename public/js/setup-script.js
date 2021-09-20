@@ -1,21 +1,17 @@
 function initialize() {
-  $("#form-storage").on("submit", (event) => {
+  $("#form-storage").on("submit", event => {
     event.preventDefault();
-
-    window.electron.clearAlerts();
-
-    const host = $("#input-host").val() || "localhost";
-    const port = $("#input-port").val() || "3306";
+    
+    const engine = $("#input-engine").val() || "mysql";
+    const address = $("#input-address").val() || "localhost:3306";
     const database = $("#input-database").val() || "curse_analytics";
     const username = $("#input-username").val() || "curse_analytics";
     const password = $("#input-password").val();
 
-    window.electron.storageConnect(host, port, database, username, password);
+    window.electron.connectStorage(engine, address, database, username, password);
   });
-
-  $().alert();
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", event => {
   initialize();
 });

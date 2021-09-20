@@ -1,44 +1,136 @@
 const {ipcRenderer} = require("electron");
 
 function initialize() {
-  if (window.location.protocol !== "https:" || window.location.hostname !== "authors.curseforge.com") {
+  if (window.location.protocol !== "https:") {
     return;
   }
 
-  if (window.location.pathname === "/twitch-login") {
-    let twitchOAuth = getTwitchOAuth();
-    if (twitchOAuth != null) {
-      window.location.href = twitchOAuth;
+  if (window.location.hostname.endsWith(".twitch.tv")) {
+    return;
+  }
+
+  ipcRenderer.on("webview.url", (event, args) => {
+    document.location.replace(args.url);
+  });
+
+  if (window.location.hostname === "authors.curseforge.com") {
+    if (window.location.pathname === "/twitch-login") {
+      let twitchOAuth = getTwitchOAuth();
+      if (twitchOAuth != null) {
+        window.location.href = twitchOAuth;
+      } else {
+        console.error("Twitch OAuth is unavailable");
+      }
+
       return;
     }
 
-    console.error("Twitch OAuth is unavailable");
-    return;
+    if (window.location.pathname === "/dashboard/projects") {
+      ipcRenderer.send("project.list", {
+        urls: getProjectUrls()
+      });
+      return;
+    }
+
+    if (window.location.pathname.startsWith("/store/transactions")) {
+      const transactions = [];
+
+      const transactionElements = document.querySelectorAll("div.transactions");
+      for (const transactionElement of transactionElements) {
+        const header = transactionElement.querySelector("div.transaction-listing-header abbr");
+        const epoch = header.getAttribute("data-epoch");
+
+        let rewards = transactionElement.querySelectorAll("ul.sub-reward-item li");
+        for (const reward of rewards) {
+          const points = reward.querySelector("b");
+          const projects = reward.querySelector("a");
+
+          transactions.push({
+            timestamp: new Date(epoch * 1000),
+            value: points.innerText,
+            slug: getProjectSlug(projects.href)
+          });
+        }
+      }
+
+      ipcRenderer.send("project.transaction", {
+        quantity: transactionElements.length,
+        transactions: transactions
+      });
+      return;
+    }
+
+    console.warn("Unhandled page: %s", window.location.href);
   }
 
-  if (window.location.pathname === "/dashboard/projects") {
-    ipcRenderer.sendToHost("analytics", getProjectIds());
-  }
+  ipcRenderer.send("project.create", {
+    id: getProjectId(),
+    name: getProjectName(),
+    slug: getProjectSlug(document.location.pathname)
+  });
 }
 
-function getProjectIds() {
-  let projectIds = [];
-  let links = getLinks();
-  for (let index = 0; index < links.length; index++) {
-    let link = links[index];
-    if (link.endsWith("/exportcsv")) {
-      let projectId = link.match(/\d+/)[0];
-      projectIds.push(parseInt(projectId));
-    }
+function getProjectId() {
+  let element;
+  if (window.location.hostname === "dev.bukkit.org") {
+    element = document.querySelector("ul.cf-details.project-details li");
   }
 
-  return projectIds;
+  if (window.location.hostname === "www.curseforge.com") {
+    element = document.querySelector("div.w-full.flex.justify-between");
+  }
+
+  if (!element) {
+    return null;
+  }
+
+  const childElements = element.children;
+  if (!childElements || childElements.length !== 2) {
+    return null;
+  }
+
+  if (childElements[0].innerText !== "Project ID") {
+    return null;
+  }
+
+  return parseInt(childElements[1].innerText);
+}
+
+function getProjectName() {
+  const element = document.querySelector("meta[property=\"og:title\"]");
+  if (!element) {
+    return null;
+  }
+
+  return element["content"];
+}
+
+function getProjectSlug(pathname) {
+  if (!pathname) {
+    return null;
+  }
+
+  const index = pathname.lastIndexOf("/");
+  if (index <= 0 || index > pathname.length) {
+    return null;
+  }
+
+  return pathname.substring(index + 1);
+}
+
+function getProjectUrls() {
+  const projects = [];
+  const links = getLinks("tbody a");
+  for (const link of links) {
+    projects.push(link);
+  }
+
+  return projects;
 }
 
 function getTwitchOAuth() {
-  let links = getLinks();
-  for (let index = 0; index < links.length; index++) {
-    let link = links[index];
+  const links = getLinks("a");
+  for (const link of links) {
     if (link.startsWith("https://id.twitch.tv/oauth2/authorize")) {
       return link;
     }
@@ -47,11 +139,10 @@ function getTwitchOAuth() {
   return null;
 }
 
-function getLinks() {
-  let links = [];
-  let elements = document.getElementsByTagName("a");
-  for (let index = 0; index < elements.length; index++) {
-    let element = elements[index];
+function getLinks(selectors) {
+  const links = [];
+  const elements = document.querySelectorAll(selectors);
+  for (const element of elements) {
     if (element.href) {
       links.push(element.href);
     }
@@ -64,20 +155,15 @@ window.addEventListener("DOMContentLoaded", () => {
   initialize();
 });
 
-window.addEventListener("load", () => {
+window.addEventListener("load", event => {
   // Twitch
-  if (window.location.host === "www.twitch.tv" || window.location.host === "id.twitch.tv") {
-    ipcRenderer.sendToHost("window:settings", {visibility: true});
+  if (window.location.host === "id.twitch.tv" || window.location.host === "www.twitch.tv") {
+    ipcRenderer.sendToHost("window.show");
     return;
   }
 
   // Cloudflare
-  let wrapper = document.getElementById("cf-wrapper");
-  if (wrapper != null) {
-    let titleElement = wrapper.querySelector(".cf-header h1");
-    let subtitleElement = wrapper.querySelector(".cf-header h2");
-    if (titleElement != null && subtitleElement != null) {
-      ipcRenderer.sendToHost("window:settings", {visibility: true});
-    }
+  if (document.getElementById("cf-wrapper")) {
+    ipcRenderer.sendToHost("window.show");
   }
 });

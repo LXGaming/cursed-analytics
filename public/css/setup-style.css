@@ -1,0 +1,8 @@
+.background {
+    background-color: #000000;
+}
+
+.log {
+    min-height: 24px;
+    max-height: 124px;
+}
