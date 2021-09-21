@@ -215,72 +215,77 @@ export class MySqlQuery implements Query {
     });
   }
 
-  async migrateAsync(callback: (message?: string) => void): Promise<void> {
-    callback("Performing migration...");
-    const exists = await new Promise<boolean>((resolve, reject) => {
-      this.storage.pool.query(""
-        + "SELECT COUNT(*) AS 'Count' "
-        + "FROM `information_schema`.`tables` "
-        + "WHERE `table_schema` = ? AND `table_name` = ? ", [this.storage.pool.config.connectionConfig.database, "stats"], (error, results) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        if (results.length !== 1) {
-          resolve(false);
-          return;
-        }
-
-        const result = results[0];
-        resolve(result.Count === 1);
-      });
-    });
-
-    if (exists === false) {
-      callback("Nothing to migrate, skipping...");
-      return;
-    }
-
-    callback("Migrating 'stats' table...");
-
-    let offset = 0;
-    while (true) {
-      const results = await new Promise<any>((resolve, reject) => {
+  async migrateAsync(version: number, callback: (message?: string) => void): Promise<number> {
+    if (version === 0) {
+      callback("Performing migration (v1)...");
+      const exists = await new Promise<boolean>((resolve, reject) => {
         this.storage.pool.query(""
-          + "SELECT CONVERT_TZ(`statDate`, '+00:00', @@session.time_zone) AS 'statDate', `projectId`, `projectName`, `projectPoints`, `projectTotalDownloads` "
-          + "FROM `stats` "
-          + "LIMIT ?, 1000", [offset], (error, results) => {
+          + "SELECT COUNT(*) AS 'Count' "
+          + "FROM `information_schema`.`tables` "
+          + "WHERE `table_schema` = ? AND `table_name` = ? ", [this.storage.pool.config.connectionConfig.database, "stats"], (error, results) => {
           if (error) {
             reject(error);
-          } else {
-            resolve(results);
+            return;
           }
+
+          if (results.length !== 1) {
+            resolve(false);
+            return;
+          }
+
+          const result = results[0];
+          resolve(result.Count === 1);
         });
       });
 
-      if (results.length === 0) {
-        break;
+      if (exists === false) {
+        callback("Nothing to migrate, skipping...");
+        return;
       }
 
-      offset += results.length;
-      for (const result of results) {
-        if (!await this.getProjectAsync(result.projectId)) {
-          await this.createProjectAsync(result.projectId, result.projectName, null);
+      callback("Migrating 'stats' table...");
+
+      let offset = 0;
+      while (true) {
+        const results = await new Promise<any>((resolve, reject) => {
+          this.storage.pool.query(""
+            + "SELECT CONVERT_TZ(`statDate`, '+00:00', @@session.time_zone) AS 'statDate', `projectId`, `projectName`, `projectPoints`, `projectTotalDownloads` "
+            + "FROM `stats` "
+            + "LIMIT ?, 1000", [offset], (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          });
+        });
+
+        if (results.length === 0) {
+          break;
         }
 
-        if (result.projectTotalDownloads !== 0) {
-          await this.createProjectDownloadAsync(result.projectId, result.statDate, result.projectTotalDownloads);
+        offset += results.length;
+        for (const result of results) {
+          if (!await this.getProjectAsync(result.projectId)) {
+            await this.createProjectAsync(result.projectId, result.projectName, null);
+          }
+
+          if (result.projectTotalDownloads !== 0) {
+            await this.createProjectDownloadAsync(result.projectId, result.statDate, result.projectTotalDownloads);
+          }
+
+          if (result.projectPoints !== 0) {
+            await this.createProjectPointAsync(result.projectId, result.statDate, result.projectPoints);
+          }
         }
 
-        if (result.projectPoints !== 0) {
-          await this.createProjectPointAsync(result.projectId, result.statDate, result.projectPoints);
-        }
+        callback(`Migrated ${offset} stats`);
       }
 
-      callback(`Migrated ${offset} stats`);
+      callback("Finished migration");
+      version = 1;
     }
 
-    callback("Finished migration");
+    return version;
   }
 }

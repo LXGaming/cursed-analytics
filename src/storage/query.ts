@@ -22,5 +22,5 @@ export interface Query {
 
   updateProjectAsync(project: Project): Promise<boolean>;
 
-  migrateAsync(callback: (message?: string) => void): Promise<void>;
+  migrateAsync(version: number, callback: (message?: string) => void): Promise<number>;
 }

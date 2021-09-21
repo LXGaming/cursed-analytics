@@ -96,14 +96,10 @@ export class CursedAnalytics {
       await this.storage.connectAsync();
       await this.storage.getQuery().createTablesAsync();
 
-      const version = storage.version;
-      if (storage.version === 0) {
-        await this.storage.getQuery().migrateAsync(message => Window.notify(Level.Debug, message));
-        storage.version = 1;
-      }
-
+      const version = await this.storage.getQuery().migrateAsync(storage.version, message => Window.notify(Level.Debug, message));
       if (storage.version !== version) {
-        console.debug("Storage v%s -> v%s", version, storage.version);
+        console.debug("Storage v%s -> v%s", storage.version, version);
+        storage.version = version;
         CursedAnalytics.getInstance().getConfig().set("storage", storage);
       }
 
