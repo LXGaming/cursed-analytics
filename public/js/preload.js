@@ -50,21 +50,13 @@ function initializeSetup() {
 }
 
 function initializeWebview() {
-  const webview = document.getElementById("webview");
-  if (!webview) {
-    return;
-  }
-
-  webview.addEventListener("ipc-message", event => {
-    if (!event.channel) {
+  ipcRenderer.on("window.show", (event, args) => {
+    const webview = document.getElementById("webview");
+    if (!webview) {
       return;
     }
 
-    const channel = event.channel;
-    if (channel === "window.show") {
-      webview.classList.remove("hidden");
-      ipcRenderer.send(channel);
-    }
+    webview.classList.remove("hidden");
   });
 }
 

@@ -158,12 +158,12 @@ window.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("load", event => {
   // Twitch
   if (window.location.host === "id.twitch.tv" || window.location.host === "www.twitch.tv") {
-    ipcRenderer.sendToHost("window.show");
+    ipcRenderer.send("window.show");
     return;
   }
 
   // Cloudflare
   if (document.getElementById("cf-wrapper")) {
-    ipcRenderer.sendToHost("window.show");
+    ipcRenderer.send("window.show");
   }
 });

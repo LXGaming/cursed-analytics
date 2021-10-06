@@ -200,12 +200,7 @@ export class IpcListener {
   }
 
   public static onWindowShow(event: Electron.IpcMainEvent, args: any): void {
-    const window = Window.getWindow();
-    if (!window || window.isVisible()) {
-      return;
-    }
-
-    window.show();
+    Window.show();
   }
 
   private static changePage(event: Electron.IpcMainEvent): void {

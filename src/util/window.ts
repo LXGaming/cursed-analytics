@@ -15,6 +15,18 @@ export class Window {
     window.webContents.send("window.notify", {level: level, message: message});
   }
 
+  public static show(): void {
+    const window = this.getWindow();
+    if (!window) {
+      return;
+    }
+
+    window.webContents.send("window.show");
+    if (!window.isVisible()) {
+      window.show();
+    }
+  }
+
   public static loadFileAsync(name): Promise<BrowserWindow> {
     console.debug("Attempting to load %s", name);
     const window = this.getOrCreateWindow();
