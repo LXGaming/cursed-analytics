@@ -74,7 +74,6 @@ export class Window {
       show: Toolbox.isDevelopmentEnvironment(),
       webPreferences: {
         contextIsolation: true,
-        nativeWindowOpen: true,
         preload: path.join(Toolbox.getPublicPath(), "js", "preload.js"),
         webviewTag: true
       }
