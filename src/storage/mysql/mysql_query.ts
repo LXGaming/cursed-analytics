@@ -64,25 +64,6 @@ export class MySqlQuery implements Query {
         }
       });
     });
-
-    await new Promise<void>((resolve, reject) => {
-      this.storage.pool.query(""
-        + "CREATE TABLE IF NOT EXISTS `ProjectPopularity` ("
-        + "`Id` BIGINT NOT NULL AUTO_INCREMENT,"
-        + "`ProjectId` BIGINT NOT NULL,"
-        + "`Timestamp` DATETIME NOT NULL,"
-        + "`Rank` BIGINT NOT NULL,"
-        + "`Score` DECIMAL(26,16) NOT NULL,"
-        + "PRIMARY KEY (`Id`),"
-        + "UNIQUE (`ProjectId`, `Timestamp`),"
-        + "FOREIGN KEY (`ProjectId`) REFERENCES `Projects` (`Id`))", error => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-    });
   }
 
   createProjectAsync(id: number, name: string, slug: string | undefined): Promise<Project> {
