@@ -14,8 +14,8 @@ Due to [CurseForge](https://www.curseforge.com/) switching [Cloudflare](https://
 [Electron](https://www.electronjs.org/) gives us the ability to scrape the project analytics and if we encounter a Captcha we can simply have the end user solve it, this isn't a perfect solution but considering the alternatives it's not a bad trade off.
 
 ## Prerequisites
-- MySQL Database
-- Grafana Instance ([Pre-Built Dashboard](https://github.com/jaredlll08/CurseForge-Stats/blob/master/grafana-dash.json))
+- [Grafana](https://grafana.com/) ([Pre-Built Dashboard](https://github.com/jaredlll08/CurseForge-Stats/blob/master/grafana-dash.json))
+- [MariaDB](https://mariadb.org/) or [MySQL](https://www.mysql.com/)
 
 ## Usage
 ```
