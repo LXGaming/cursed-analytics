@@ -1,6 +1,6 @@
 # Cursed Analytics
 
-[![License](https://lxgaming.github.io/badges/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![License](https://img.shields.io/github/license/LXGaming/cursed-analytics?label=License&cacheSeconds=86400)](https://github.com/LXGaming/cursed-analytics/blob/main/LICENSE)
 
 **Cursed Analytics** is a cursed way of obtaining project analytic data from [CurseForge](https://www.curseforge.com/) with minimal user interaction.
 
@@ -24,4 +24,4 @@ npm run start
 ```
 
 ## License
-Cursed Analytics is licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license.
+Cursed Analytics is licensed under the [Apache 2.0](https://github.com/LXGaming/cursed-analytics/blob/main/LICENSE) license.
