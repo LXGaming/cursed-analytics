@@ -1,7 +1,7 @@
-import {app} from "electron";
-import {readdir} from "fs/promises";
+import { app } from "electron";
+import { readdir } from "fs/promises";
 import * as path from "path";
-import {URL} from "url";
+import { URL } from "url";
 
 export class Toolbox {
 
@@ -50,7 +50,7 @@ export class Toolbox {
   }
 
   private static async* getFilesAsync(directory: string): AsyncIterableIterator<string> {
-    const entries = await readdir(directory, {withFileTypes: true});
+    const entries = await readdir(directory, { withFileTypes: true });
     for (const entry of entries) {
       const entryPath = path.resolve(directory, entry.name);
       if (entry.isDirectory()) {

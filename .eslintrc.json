@@ -24,6 +24,7 @@
         "linebreak-style": "off",
         "max-len": ["off"],
         "new-cap": ["warn"],
+        "object-curly-spacing": ["error", "always"],
         "operator-linebreak": ["error", "before"],
         "padded-blocks": ["off"],
         "quotes": ["error", "double"],

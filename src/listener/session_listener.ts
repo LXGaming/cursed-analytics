@@ -1,7 +1,7 @@
-import {Toolbox} from "../util/toolbox";
-import {URL} from "url";
-import {CursedAnalytics} from "../main";
-import {fileURLToPath} from "url";
+import { Toolbox } from "../util/toolbox";
+import { URL } from "url";
+import { CursedAnalytics } from "../main";
+import { fileURLToPath } from "url";
 
 export class SessionListener {
 
@@ -84,12 +84,12 @@ export class SessionListener {
       console.debug("[ALLOW] %s", Toolbox.sanitizeUrl(url));
     }
 
-    callback({cancel: false, redirectURL: redirectUrl});
+    callback({ cancel: false, redirectURL: redirectUrl });
   }
 
   private static block(url: URL, callback: (response: Electron.Response) => void): void {
     console.debug("[BLOCK] %s", Toolbox.sanitizeUrl(url));
-    callback({cancel: true});
+    callback({ cancel: true });
   }
 
   private static isCurseForge(url: URL): boolean {

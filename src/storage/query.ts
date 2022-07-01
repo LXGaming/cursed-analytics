@@ -1,6 +1,6 @@
-import {Project} from "../entity/project";
-import {ProjectDownload} from "../entity/project_download";
-import {ProjectPoint} from "../entity/project_point";
+import { Project } from "../entity/project";
+import { ProjectDownload } from "../entity/project_download";
+import { ProjectPoint } from "../entity/project_point";
 
 export interface Query {
 

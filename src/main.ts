@@ -1,16 +1,16 @@
-import {name, version} from "../package.json";
-import {app, ipcMain} from "electron";
+import { name, version } from "../package.json";
+import { app, ipcMain } from "electron";
 import * as ElectronStore from "electron-store";
-import {Config} from "./configuration/config";
-import {Configuration} from "./configuration/configuration";
-import {Level} from "./entity/level";
-import {AppListener} from "./listener/app_listener";
-import {IpcListener} from "./listener/ipc_listener";
-import {DataManager} from "./manager/data_manager";
-import {Storage} from "./storage/storage";
-import {MySqlStorage} from "./storage/mysql/mysql_storage";
-import {Toolbox} from "./util/toolbox";
-import {Window} from "./util/window";
+import { Config } from "./configuration/config";
+import { Configuration } from "./configuration/configuration";
+import { Level } from "./entity/level";
+import { AppListener } from "./listener/app_listener";
+import { IpcListener } from "./listener/ipc_listener";
+import { DataManager } from "./manager/data_manager";
+import { Storage } from "./storage/storage";
+import { MySqlStorage } from "./storage/mysql/mysql_storage";
+import { Toolbox } from "./util/toolbox";
+import { Window } from "./util/window";
 
 export class CursedAnalytics {
 

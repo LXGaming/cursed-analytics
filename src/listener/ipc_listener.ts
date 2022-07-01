@@ -1,9 +1,9 @@
-import {app} from "electron";
-import {CursedAnalytics} from "../main";
-import {Level} from "../entity/level";
-import {DataManager} from "../manager/data_manager";
-import {Toolbox} from "../util/toolbox";
-import {Window} from "../util/window";
+import { app } from "electron";
+import { CursedAnalytics } from "../main";
+import { Level } from "../entity/level";
+import { DataManager } from "../manager/data_manager";
+import { Toolbox } from "../util/toolbox";
+import { Window } from "../util/window";
 
 export class IpcListener {
 
@@ -212,6 +212,6 @@ export class IpcListener {
     }
 
     console.debug("Loading page: %s", url);
-    event.sender.send("webview.url", {url: url});
+    event.sender.send("webview.url", { url: url });
   }
 }

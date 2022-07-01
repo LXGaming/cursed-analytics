@@ -1,10 +1,10 @@
 import * as mysql from "mysql";
-import {Pool} from "mysql";
-import {MySqlQuery} from "./mysql_query";
-import {Query} from "../query";
-import {Storage} from "../storage";
-import {CursedAnalytics} from "../../main";
-import {Toolbox} from "../../util/toolbox";
+import { Pool } from "mysql";
+import { MySqlQuery } from "./mysql_query";
+import { Query } from "../query";
+import { Storage } from "../storage";
+import { CursedAnalytics } from "../../main";
+import { Toolbox } from "../../util/toolbox";
 
 export class MySqlStorage implements Storage {
 

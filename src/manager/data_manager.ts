@@ -1,6 +1,6 @@
 import NodeCache = require("node-cache");
-import {CursedAnalytics} from "../main";
-import {Project} from "../entity/project";
+import { CursedAnalytics } from "../main";
+import { Project } from "../entity/project";
 
 export class DataManager {
 

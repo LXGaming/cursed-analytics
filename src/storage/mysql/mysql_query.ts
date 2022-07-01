@@ -1,8 +1,8 @@
-import {MySqlStorage} from "./mysql_storage";
-import {Query} from "../query";
-import {Project} from "../../entity/project";
-import {ProjectDownload} from "../../entity/project_download";
-import {ProjectPoint} from "../../entity/project_point";
+import { MySqlStorage } from "./mysql_storage";
+import { Query } from "../query";
+import { Project } from "../../entity/project";
+import { ProjectDownload } from "../../entity/project_download";
+import { ProjectPoint } from "../../entity/project_point";
 
 export class MySqlQuery implements Query {
 

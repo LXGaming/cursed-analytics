@@ -1,8 +1,8 @@
-import {BrowserWindow} from "electron";
+import { BrowserWindow } from "electron";
 import * as path from "path";
-import {Toolbox} from "./toolbox";
-import {Level} from "../entity/level";
-import {WindowListener} from "../listener/window_listener";
+import { Toolbox } from "./toolbox";
+import { Level } from "../entity/level";
+import { WindowListener } from "../listener/window_listener";
 
 export class Window {
 
@@ -12,7 +12,7 @@ export class Window {
       return;
     }
 
-    window.webContents.send("window.notify", {level: level, message: message});
+    window.webContents.send("window.notify", { level: level, message: message });
   }
 
   public static show(): void {

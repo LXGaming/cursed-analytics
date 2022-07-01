@@ -1,7 +1,7 @@
-import {WebPreferences} from "electron";
+import { WebPreferences } from "electron";
 import * as path from "path";
 import * as url from "url";
-import {Toolbox} from "../util/toolbox";
+import { Toolbox } from "../util/toolbox";
 
 export class WindowListener {
 

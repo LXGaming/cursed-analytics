@@ -1,7 +1,7 @@
-import {app} from "electron";
-import {SessionListener} from "./session_listener";
-import {CursedAnalytics} from "../main";
-import {Window} from "../util/window";
+import { app } from "electron";
+import { SessionListener } from "./session_listener";
+import { CursedAnalytics } from "../main";
+import { Window } from "../util/window";
 
 export class AppListener {
 
