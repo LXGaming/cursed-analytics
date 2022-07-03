@@ -4,6 +4,7 @@
         "node": true
     },
     "extends": [
+        "eslint:recommended",
         "google"
     ],
     "ignorePatterns": [
@@ -24,6 +25,8 @@
         "linebreak-style": "off",
         "max-len": ["off"],
         "new-cap": ["warn"],
+        "no-constant-condition": ["off"],
+        "no-undef": ["off"],
         "object-curly-spacing": ["error", "always"],
         "operator-linebreak": ["error", "before"],
         "padded-blocks": ["off"],
