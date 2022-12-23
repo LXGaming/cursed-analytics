@@ -8,7 +8,7 @@ export class SessionListener {
   private static blocking: boolean;
   private static error: boolean;
 
-  public static onBeforeRequest(details: Electron.OnBeforeRequestListenerDetails, callback: (response: Electron.Response) => void): void {
+  public static onBeforeRequest(details: Electron.OnBeforeRequestListenerDetails, callback: (response: Electron.CallbackResponse) => void): void {
     const url = new URL(details.url);
 
     // Allow DevTools
@@ -77,7 +77,7 @@ export class SessionListener {
     callback(details);
   }
 
-  private static allow(url: URL, callback: (response: Electron.Response) => void, redirectUrl: string = null): void {
+  private static allow(url: URL, callback: (response: Electron.CallbackResponse) => void, redirectUrl: string = null): void {
     if (redirectUrl) {
       console.debug("[REDIRECT] %s -> %s", Toolbox.sanitizeUrl(url), Toolbox.sanitizeUrl(redirectUrl));
     } else {
@@ -87,7 +87,7 @@ export class SessionListener {
     callback({ cancel: false, redirectURL: redirectUrl });
   }
 
-  private static block(url: URL, callback: (response: Electron.Response) => void): void {
+  private static block(url: URL, callback: (response: Electron.CallbackResponse) => void): void {
     console.debug("[BLOCK] %s", Toolbox.sanitizeUrl(url));
     callback({ cancel: true });
   }
