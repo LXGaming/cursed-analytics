@@ -206,7 +206,7 @@ export class IpcListener {
   private static changePage(event: Electron.IpcMainEvent): void {
     let url;
     if (this.ProjectUrls.length === 0) {
-      url = `https://authors.curseforge.com/store/transactions-ajax/${this.offset}-${this.quantity}-2`;
+      url = `https://authors-old.curseforge.com/store/transactions-ajax/${this.offset}-${this.quantity}-2`;
     } else {
       url = this.ProjectUrls.pop();
     }

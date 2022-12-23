@@ -13,7 +13,7 @@ function initialize() {
     document.location.replace(args.url);
   });
 
-  if (window.location.hostname === "authors.curseforge.com") {
+  if (window.location.hostname === "authors-old.curseforge.com") {
     if (window.location.pathname === "/twitch-login") {
       let twitchOAuth = getTwitchOAuth();
       if (twitchOAuth != null) {

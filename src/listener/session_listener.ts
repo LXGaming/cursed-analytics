@@ -36,7 +36,7 @@ export class SessionListener {
 
     // Redirect from CurseForge home page to projects page (Approved projects only)
     if (this.isCurseForge(url) && (url.pathname === "/" || url.pathname === "/dashboard")) {
-      this.allow(url, callback, "https://authors.curseforge.com/dashboard/projects?filter-project-status=4");
+      this.allow(url, callback, "https://authors-old.curseforge.com/dashboard/projects?filter-project-status=4");
       return;
     }
 
@@ -94,7 +94,7 @@ export class SessionListener {
 
   private static isCurseForge(url: URL): boolean {
     return url.host === "dev.bukkit.org"
-      || url.host === "authors.curseforge.com"
+      || url.host === "authors-old.curseforge.com"
       || url.host === "www.curseforge.com";
   }
 

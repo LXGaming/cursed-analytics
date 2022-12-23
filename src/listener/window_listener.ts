@@ -15,7 +15,7 @@ export class WindowListener {
     }
 
     // Prevent webview from loading unauthorized src
-    if (!Toolbox.isDevelopmentEnvironment() && params.src !== "https://authors.curseforge.com/") {
+    if (!Toolbox.isDevelopmentEnvironment() && params.src !== "https://authors-old.curseforge.com/") {
       event.preventDefault();
     }
   }
