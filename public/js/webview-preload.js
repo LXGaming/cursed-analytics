@@ -162,8 +162,17 @@ window.addEventListener("load", event => {
     return;
   }
 
-  // Cloudflare
-  if (document.getElementById("cf-wrapper")) {
-    ipcRenderer.send("window.show");
+  const selectors = [
+      // Cloudflare
+      "cf-wrapper", // Legacy
+      "challenge-running",
+      "trk_jschal_js"
+  ];
+
+  for (const selector of selectors) {
+    if (document.getElementById(selector)) {
+      ipcRenderer.send("window.show");
+      break;
+    }
   }
 });
