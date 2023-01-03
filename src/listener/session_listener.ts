@@ -71,7 +71,7 @@ export class SessionListener {
   public static onHeadersReceived(details: Electron.OnHeadersReceivedListenerDetails, callback: (headersReceivedResponse: Electron.HeadersReceivedResponse) => void): void {
     if (details.resourceType === "mainFrame") {
       const url = new URL(details.url);
-      this.error = details.statusCode === 403 && this.isCurseForge(url);
+      this.error = (details.statusCode === 403 || details.statusCode === 503) && this.isCurseForge(url);
     }
 
     callback(details);
