@@ -1,4 +1,4 @@
-import { WebPreferences } from "electron";
+import { Event, WebPreferences } from "electron";
 import * as path from "path";
 import * as url from "url";
 import { Toolbox } from "../util/toolbox";
