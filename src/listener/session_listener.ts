@@ -95,6 +95,7 @@ export class SessionListener {
   private static isCurseForge(url: URL): boolean {
     return url.host === "dev.bukkit.org"
       || url.host === "authors-old.curseforge.com"
+      || url.host === "legacy.curseforge.com"
       || url.host === "www.curseforge.com";
   }
 
