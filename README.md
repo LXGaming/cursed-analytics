@@ -19,8 +19,8 @@ Due to [CurseForge](https://www.curseforge.com/) switching [Cloudflare](https://
 
 ## Usage
 ```
-npm install
-npm run start
+pnpm install
+pnpm run start
 ```
 
 ## License

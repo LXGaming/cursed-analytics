@@ -19,10 +19,10 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "npm run build && cross-env NODE_ENV=development electron --remote-debugging-port=9222 .",
-    "dist": "npm run lint && npm run build && electron-builder",
+    "dev": "pnpm run build && cross-env NODE_ENV=development electron --remote-debugging-port=9222 .",
+    "dist": "pnpm run lint && pnpm run build && electron-builder",
     "lint": "eslint src --ext .js,.ts",
-    "start": "npm run build && electron .",
+    "start": "pnpm run build && electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc -w"
   },
